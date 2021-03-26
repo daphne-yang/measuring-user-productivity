@@ -1,0 +1,20 @@
+---
+title: "pilot_data_eda"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Loading the Data
+
+The first part of this exploratory data analysis is to load the data to see what it looks like. 
+
+```{r}
+d <- read.csv('data/pilot/pilot_data.csv')
+d
+```
+
