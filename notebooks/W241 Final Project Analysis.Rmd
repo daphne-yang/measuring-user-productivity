@@ -19,7 +19,7 @@ data <- data[Diff_found<=15]
 
 
 ```{r}
-data[,"Score"] = data[,"Pattern_score"] + data[,"RC_score"]+data[,"Diff_score"]+data[,"M_score"]
+#data[,"Score"] = data[,"Pattern_score"] + data[,"RC_score"]+data[,"Diff_score"]+data[,"M_score"]
 ```
 
 #Model Creation
