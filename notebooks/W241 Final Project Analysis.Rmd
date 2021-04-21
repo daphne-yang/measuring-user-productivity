@@ -19,7 +19,7 @@ data <- data[Diff_found<=15]
 
 
 ```{r}
-data[,"Score"] = data[,"Pattern_score"] + data[,"RC_score"]+data[,"Diff_score"]+data[,"M_score"]
+#data[,"Score"] = data[,"Pattern_score"] + data[,"RC_score"]+data[,"Diff_score"]+data[,"M_score"]
 ```
 
 #Model Creation
@@ -46,34 +46,33 @@ robust_CI_1
 ```
 
 
-```{r}
-model2 = lm(Score ~ (group=="dark_mode")+(group=="low_contrast")+(group=="neon")+as.factor(student_status),data=data)
-summary(model2)
-
-```
-
-```{r}
-robust_CI_2<- coefci(
-  x = model2, 
-  level = 0.95, 
-  vcov. = vcovHC(model2)
-  ) 
-robust_CI_2
-```
 > It seems that there's not a significant effect. However our intuition is correct as the sign of the coefficients for most of our groups is correct. 
 
 ```{r}
-model3 = lm(Score ~ (group=="dark_mode")+(group=="low_contrast")+(group=="neon")+as.factor(student_status)+nighttime,data=data)
+model3 <- lm(Score ~ group!="light_mode",data=data)
 summary(model3)
 ```
-```{r}
-robust_CI_3<- coefci(
-  x = model3, 
-  level = 0.95, 
-  vcov. = vcovHC(model3)
-  ) 
-robust_CI_3
 
+```{r}
+correct_p_values <- function(p_value) {
+   p_value*10
+}
+```
+
+```{r}
+correct_p_values(.039)
+```
+
+
+```{r}
+stargazer(model1,model3,type="html",dep.var.labels="Overall Score",covariate.labels=c("Dark Mode","Low Constrast","Neon","Any Treatment","Intercept"))
+```
+```{r}
+interaction_model <- lm(Score~group*nighttime,data=data)
+summary(interaction_model)
+```
+```{r}
+stargazer(interaction_model,type="html")
 ```
 
 ```{r}
@@ -84,9 +83,8 @@ tests = c()
 Let's perform T tests for each of the questions 
 
 # T test for Reading Comprehension
-```{r}
-t.test(light_mode[,RC_score],dark_mode[,RC_score])
-```
+
+
 
 ```{r}
 tests <- c(tests,t.test(light_mode[,RC_score],dark_mode[,RC_score])$p.value)
@@ -141,6 +139,10 @@ tests <- c(tests,t.test(light_mode[,Big_liar_score],low_contrast[,Big_liar_score
 ```{r}
 tests <- c(tests,t.test(light_mode[,Big_liar_score],neon_mode[,Big_liar_score])$p.value)
 ```
+```{r}
+tests
+
+```
 
 ```{r}
 sorted_tests <- sort(tests)
@@ -156,9 +158,7 @@ sorted_tests<= thresholds
 ```
 
 ```{r}
-for (col in data[,c("RC_score","Diff_score","M_score","Pattern_score"),by=group]){
-  pritn()
-}
+
 ```
 
 
