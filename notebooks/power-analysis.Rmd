@@ -1,0 +1,62 @@
+---
+title: "power_analysis"
+author: "daphne-yang"
+date: "4/13/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(pwr)
+library(data.table)
+library(stargazer)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r power-analysis}
+power <- pwr.anova.test(k=4,f=.25,sig.level=.05,power=.8)
+power
+```
+
+```{r}
+setwd('/Users/daphneyang/Desktop/5YMIDS_SP21/w241/measuring-user-productivity/')
+data <- fread('data/scored.csv')
+head(data)
+```
+## Covariate Balance Checks
+```{r}
+date_of_birth <- data$dob
+treatment_groups <- as.factor(data$group)
+bartlett.test(date_of_birth,treatment_groups)
+```
+
+
+## Anova Tests For Significance 
+
+```{r}
+anova <- aov(Score ~ group, data = data)
+summary(anova)
+```
+
+```{r}
+rc_anova <- aov(RC_score ~ group, data = data)
+summary.aov(rc_anova)
+```
+```{r}
+m_anova <- aov(M_score ~ group, data = data)
+summary.aov(m_anova)
+```
+```{r}
+diff_anova <- aov(Diff_score ~ group, data = data)
+summary.aov(diff_anova)
+```
+```{r}
+pattern_anova <- aov(Pattern_score ~ group, data = data)
+summary.aov(pattern_anova)
+```
+
