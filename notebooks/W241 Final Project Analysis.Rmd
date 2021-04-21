@@ -49,17 +49,30 @@ robust_CI_1
 > It seems that there's not a significant effect. However our intuition is correct as the sign of the coefficients for most of our groups is correct. 
 
 ```{r}
-model2 = lm(Score ~ (group=="dark_mode")+(group=="low_contrast")+(group=="neon")+nighttime,data=data)
-summary(model2)
+model3 <- lm(Score ~ group!="light_mode",data=data)
+summary(model3)
+```
+
+```{r}
+correct_p_values <- function(p_value) {
+   p_value*10
+}
+```
+
+```{r}
+correct_p_values(.039)
+```
+
+
+```{r}
+stargazer(model1,model3,type="html",dep.var.labels="Overall Score",covariate.labels=c("Dark Mode","Low Constrast","Neon","Any Treatment","Intercept"))
 ```
 ```{r}
-robust_CI_2<- coefci(
-  x = model2, 
-  level = 0.95, 
-  vcov. = vcovHC(model2)
-  ) 
-robust_CI_2
-
+interaction_model <- lm(Score~group*nighttime,data=data)
+summary(interaction_model)
+```
+```{r}
+stargazer(interaction_model,type="html")
 ```
 
 ```{r}
